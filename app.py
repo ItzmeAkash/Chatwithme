@@ -25,7 +25,7 @@ llm = ChatGroq(groq_api_key=GROQ_API_KEY, model_name="llama3-groq-70b-8192-tool-
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-st.title("🤖 AI - ChatBot")
+st.title("🤖 AI - Copilot")
 
 prompt1 = st.text_input("Ask anything.....")
 
