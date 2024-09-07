@@ -1,5 +1,4 @@
 import os
-import json
 import streamlit as st
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
@@ -30,37 +29,9 @@ st.title("🤖 AI - ChatBot")
 
 prompt1 = st.text_input("Ask anything.....")
 
-def handle_tool_response(response_content):
-    """
-    Handles the tool response if the model's output includes tool calls.
-    """
-    try:
-        # Attempt to find tool call in the response
-        if "<tool_call>" in response_content and "</tool_call>" in response_content:
-            start = response_content.index("<tool_call>") + len("<tool_call>")
-            end = response_content.index("</tool_call>")
-            tool_call = response_content[start:end].strip()
-
-            # Parse the tool call content
-            tool_call_data = json.loads(tool_call)
-            tool_name = tool_call_data.get("name", "unknown tool")
-            tool_arguments = tool_call_data.get("arguments", {})
-
-            # Example tool handling logic
-            if tool_name == "date":
-                return f"(Tool) Today's date is: {tool_arguments.get('date', 'N/A')}"
-            else:
-                return f"(Tool) Tool call detected for: {tool_name} with arguments {tool_arguments}"
-
-    except Exception as e:
-        return f"(Error) Could not parse tool call: {str(e)}"
-
-    return response_content
-
 if prompt1:
     response = llm.invoke(prompt1)
-    processed_response = handle_tool_response(response.content)
-    st.session_state.chat_history.append({"question": prompt1, "response": processed_response})
+    st.session_state.chat_history.append({"question": prompt1, "response": response.content})
 
 for chat in st.session_state.chat_history:
     st.write(f"**You:** {chat['question']}")
